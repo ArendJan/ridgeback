@@ -417,15 +417,6 @@ bool MecanumDriveController::setWheelParamsFromUrdf(ros::NodeHandle& root_nh,
       wheels_k_ = (-(-wheel0_x - wheel0_y) - (wheel1_x - wheel1_y) + (-wheel2_x - wheel2_y) + (wheel3_x - wheel3_y))
                   / 4.0;
     }
-    else
-    {
-      ROS_INFO_STREAM("Wheel seperation in X: " << wheel_separation_x_);
-      ROS_INFO_STREAM("Wheel seperation in Y: " << wheel_separation_y_);
-
-      // The seperation is the total distance between the wheels in X and Y.
-
-      wheels_k_ = (wheel_separation_x_ + wheel_separation_y_) / 2.0;
-    }
 
     if (lookup_wheel_radius)
     {
@@ -448,13 +439,24 @@ bool MecanumDriveController::setWheelParamsFromUrdf(ros::NodeHandle& root_nh,
           abs(wheel0_radius - wheel2_radius) > 1e-3 ||
           abs(wheel0_radius - wheel3_radius) > 1e-3)
       {
-        ROS_ERROR_STREAM_NAMED(name_, "Wheels radius are not egual");
+        ROS_ERROR_STREAM_NAMED(name_, "Wheels radius are not ecual");
         return false;
       }
 
       wheels_radius_ = wheel0_radius;
     }
   }
+
+  if(!lookup_wheel_separation) 
+  {
+    ROS_INFO_STREAM("Wheel separation in X: " << wheel_separation_x_);
+    ROS_INFO_STREAM("Wheel separation in Y: " << wheel_separation_y_);
+
+    // The seperation is the total distance between the wheels in X and Y.
+
+    wheels_k_ = (wheel_separation_x_ + wheel_separation_y_) / 2.0;
+  }
+
 
   ROS_INFO_STREAM("Wheel radius: " << wheels_radius_);
 
